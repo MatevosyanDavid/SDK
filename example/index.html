@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Example page demonstrating the SEO Data Collection SDK">
+  <title>SEO SDK Example - Best Practices for SEO</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SEO SDK Example">
+  <meta property="og:description" content="Learn about SEO best practices">
+  <meta property="og:type" content="website">
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "SEO Best Practices",
+    "author": {
+      "@type": "Person",
+      "name": "SEO Expert"
+    }
+  }
+  </script>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    h2 {
+      color: #34495e;
+      margin-top: 30px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .actions {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .actions button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .actions button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>SEO Best Practices Guide</h1>
+
+  <p>Search Engine Optimization (SEO) is crucial for improving your website's visibility in search engine results. This
+    comprehensive guide will help you understand the fundamentals of SEO and implement best practices on your website.
+  </p>
+
+  <h2>What is SEO?</h2>
+  <p>SEO stands for Search Engine Optimization. It's the practice of optimizing your website to rank higher in search
+    engine results pages (SERPs). Good SEO helps search engines understand your content and connects your website with
+    people searching for what you offer.</p>
+
+  <h2>Why is SEO Important?</h2>
+  <ul>
+    <li>Increases organic traffic to your website</li>
+    <li>Improves brand visibility and credibility</li>
+    <li>Provides better user experience</li>
+    <li>Offers long-term sustainable results</li>
+    <li>Cost-effective marketing strategy</li>
+  </ul>
+
+  <h2>How to Improve Your SEO</h2>
+
+  <h3>1. Keyword Research</h3>
+  <p>Identify relevant keywords your target audience is searching for. Use tools like Google Keyword Planner to find
+    keywords with good search volume and reasonable competition.</p>
+
+  <h3>2. On-Page Optimization</h3>
+  <p>Optimize your title tags, meta descriptions, headings, and content. Ensure your primary keyword appears naturally
+    throughout your content, especially in the first paragraph.</p>
+
+  <h3>3. Content Quality</h3>
+  <p>Create high-quality, valuable content that answers users' questions. Aim for comprehensive articles with at least
+    1000 words for competitive topics.</p>
+
+  <h3>4. Technical SEO</h3>
+  <p>Ensure your website loads quickly, is mobile-friendly, and has proper site structure. Use HTTPS, create an XML
+    sitemap, and fix broken links.</p>
+
+  <img src="https://via.placeholder.com/800x400" alt="SEO optimization diagram showing various factors">
+
+  <h2>Frequently Asked Questions</h2>
+
+  <h3>How long does SEO take to work?</h3>
+  <p>SEO typically takes 3-6 months to show significant results. It's a long-term strategy that requires patience and
+    consistent effort.</p>
+
+  <h3>Do I need to hire an SEO expert?</h3>
+  <p>While you can learn basic SEO yourself, hiring an expert can save time and help you avoid costly mistakes,
+    especially for competitive industries.</p>
+
+  <h3>What's the difference between on-page and off-page SEO?</h3>
+  <p>On-page SEO refers to optimizations you make on your website (content, meta tags, structure), while off-page SEO
+    involves external factors like backlinks and social signals.</p>
+
+  <div class="actions">
+    <button onclick="collectData()">Collect Data</button>
+    <button onclick="sendData()">Send Data</button>
+    <button onclick="showData()">Show Data</button>
+    <button onclick="optOut()">Opt Out</button>
+  </div>
+
+  <!-- Load the SDK -->
+  <script src="../dist/seo-sdk.min.js"></script>
+
+  <script>
+    // Initialize the SDK
+    const seoSDK = new SEODataSDK({
+      apiEndpoint: 'https://your-api.com/analytics',
+      apiKey: 'demo-api-key',
+      primaryKeyword: 'SEO best practices',
+      privacyMode: 'opt-in',
+      enableHeatmap: true,
+      enableScrollTracking: true,
+      enableClickTracking: true
+    });
+
+    // Request consent
+    seoSDK.requestConsent().then(hasConsent => {
+      if (hasConsent) {
+        seoSDK.init();
+        console.log('SDK initialized with consent');
+      } else {
+        console.log('User declined consent');
+      }
+    });
+
+    // Demo functions
+    async function collectData() {
+      const data = await seoSDK.collectData();
+      console.log('Data collected:', data);
+      alert('Data collected! Check console for details.');
+    }
+
+    async function sendData() {
+      await seoSDK.send();
+      alert('Data sent to API!');
+    }
+
+    function showData() {
+      const data = seoSDK.getData();
+      console.log('Current data:', data);
+      alert('Current data logged to console!');
+    }
+
+    function optOut() {
+      seoSDK.optOut();
+      alert('Opted out of tracking!');
+    }
+  </script>
+</body>
+
+</html>
