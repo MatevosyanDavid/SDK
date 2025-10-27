@@ -45,8 +45,8 @@ module.exports = (env, argv) => {
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: !isDevelopment,
-              pure_funcs: isDevelopment ? [] : ['console.log'],
+              drop_console: false, // Keep console logs in production
+              pure_funcs: [], // Don't remove any console methods
             },
             output: {
               comments: false,

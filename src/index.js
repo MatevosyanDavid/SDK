@@ -100,6 +100,7 @@ class SEODataSDK {
    * Collect all SEO data
    */
   async collectData() {
+    console.log('[SEO SDK] Starting data collection...');
     try {
       const [
         pageData,
