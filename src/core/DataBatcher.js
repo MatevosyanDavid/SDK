@@ -32,8 +32,11 @@ class DataBatcher {
       _timestamp: Date.now(),
     });
 
+    console.log('[Data Batcher] Data added to queue. Queue size:', this.queue.length);
+
     // If queue is full, flush immediately
     if (this.queue.length >= this.maxQueueSize) {
+      console.log('[Data Batcher] Queue full, flushing immediately');
       this.flush();
     }
   }
@@ -42,8 +45,11 @@ class DataBatcher {
    * Start batch interval
    */
   startBatchInterval() {
+    console.log('[Data Batcher] Starting batch interval:', this.batchInterval, 'ms');
     this.interval = setInterval(() => {
+      console.log('[Data Batcher] Interval tick. Queue size:', this.queue.length);
       if (this.queue.length > 0) {
+        console.log('[Data Batcher] Flushing queue');
         this.flush();
       }
     }, this.batchInterval);
@@ -62,13 +68,15 @@ class DataBatcher {
    * Flush queue and send data to API
    */
   async flush() {
-    if (this.queue.length === 0 || this.isProcessing) {
-      return;
-    }
+    console.log(
+      '[Data Batcher] flush() called. Queue size:',
+      this.queue.length,
+      'isProcessing:',
+      this.isProcessing,
+    );
 
-    if (!this.apiEndpoint) {
-      console.warn('[Data Batcher] No API endpoint configured, clearing queue');
-      this.queue = [];
+    if (this.queue.length === 0 || this.isProcessing) {
+      console.log('[Data Batcher] Skipping flush (empty queue or already processing)');
       return;
     }
 
@@ -100,6 +108,21 @@ class DataBatcher {
       batchSize: batch.length,
       timestamp: Date.now(),
     };
+
+    // Log collected data to console
+    console.log('==========================================');
+    console.log('📊 SEO DATA COLLECTED');
+    console.log('==========================================');
+    console.log('Batch Size:', payload.batchSize);
+    console.log('Timestamp:', new Date(payload.timestamp).toISOString());
+    console.log('Events:', payload.events);
+    console.log('==========================================');
+
+    // If no API endpoint configured, just log and return
+    if (!this.apiEndpoint) {
+      console.log('✅ Data collection complete (API endpoint not configured)');
+      return { success: true, logged: true };
+    }
 
     const response = await fetch(this.apiEndpoint, {
       method: 'POST',

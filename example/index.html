@@ -117,8 +117,6 @@
   <p>Ensure your website loads quickly, is mobile-friendly, and has proper site structure. Use HTTPS, create an XML
     sitemap, and fix broken links.</p>
 
-  <img src="https://via.placeholder.com/800x400" alt="SEO optimization diagram showing various factors">
-
   <h2>Frequently Asked Questions</h2>
 
   <h3>How long does SEO take to work?</h3>
@@ -140,16 +138,15 @@
     <button onclick="optOut()">Opt Out</button>
   </div>
 
-  <!-- Load the SDK -->
-  <script src="../dist/seo-sdk.min.js"></script>
+  <!-- Load the SDK (development build with console logs) -->
+  <script src="../dist/seo-sdk.js"></script>
 
   <script>
-    // Initialize the SDK
+    // Initialize the SDK (no API endpoint - just collecting and logging data)
     const seoSDK = new SEODataSDK({
-      apiEndpoint: 'https://your-api.com/analytics',
-      apiKey: 'demo-api-key',
       primaryKeyword: 'SEO best practices',
       privacyMode: 'opt-in',
+      batchInterval: 5000, // 5 seconds for testing
       enableHeatmap: true,
       enableScrollTracking: true,
       enableClickTracking: true

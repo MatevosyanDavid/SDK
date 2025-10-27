@@ -284,6 +284,11 @@ class PageDataCollector {
    * Check if sitemap exists
    */
   async checkSitemap() {
+    // Skip check for file:// protocol (local files)
+    if (window.location.protocol === 'file:') {
+      return false;
+    }
+
     try {
       const response = await fetch('/sitemap.xml', { method: 'HEAD' });
       return response.ok;
@@ -296,6 +301,11 @@ class PageDataCollector {
    * Check if robots.txt exists
    */
   async checkRobotsTxt() {
+    // Skip check for file:// protocol (local files)
+    if (window.location.protocol === 'file:') {
+      return false;
+    }
+
     try {
       const response = await fetch('/robots.txt', { method: 'HEAD' });
       return response.ok;

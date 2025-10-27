@@ -138,6 +138,8 @@ class SEODataSDK {
         performance: performanceData,
       };
 
+      console.log('[SEO SDK] Data collected successfully');
+
       // Add to batch queue
       this.dataBatcher.add(this.data);
 
