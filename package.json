@@ -1,6 +1,6 @@
 {
   "name": "seo-data-collection-sdk",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Lightweight, privacy-focused JavaScript SDK for collecting comprehensive SEO and website performance data",
   "main": "dist/seo-sdk.min.js",
   "module": "src/index.js",
