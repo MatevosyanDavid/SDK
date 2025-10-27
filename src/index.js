@@ -23,8 +23,9 @@ class SEODataSDK {
       enableHeatmap: config.enableHeatmap !== false,
       enableScrollTracking: config.enableScrollTracking !== false,
       enableClickTracking: config.enableClickTracking !== false,
-      privacyMode: config.privacyMode || 'opt-in', // 'opt-in', 'opt-out', 'auto'
+      privacyMode: config.privacyMode || 'auto', // 'opt-in', 'opt-out', 'auto' - default to auto
       primaryKeyword: config.primaryKeyword || null,
+      onDataCollected: config.onDataCollected || null, // Custom callback for data handling
       ...config,
     };
 
@@ -41,6 +42,7 @@ class SEODataSDK {
       this.config.apiEndpoint,
       this.config.apiKey,
       this.config.batchInterval,
+      this.config.onDataCollected, // Pass callback to batcher
     );
 
     // Auto-initialize if privacy allows
@@ -89,8 +91,6 @@ class SEODataSDK {
       this.startPeriodicCollection();
 
       this.isInitialized = true;
-
-      console.log('[SEO SDK] Initialized successfully');
     } catch (error) {
       console.error('[SEO SDK] Initialization error:', error);
     }
@@ -100,7 +100,6 @@ class SEODataSDK {
    * Collect all SEO data
    */
   async collectData() {
-    console.log('[SEO SDK] Starting data collection...');
     try {
       const [
         pageData,
@@ -117,6 +116,8 @@ class SEODataSDK {
         this.collectors.backlinks.detect(),
         this.collectors.serpFeatures.detect(),
       ]);
+
+      console.log('collected Data', this.collectors);
 
       // Analyze issues based on collected data
       const issues = this.collectors.issues.analyze({
@@ -139,7 +140,7 @@ class SEODataSDK {
         performance: performanceData,
       };
 
-      console.log('[SEO SDK] Data collected successfully');
+      console.log('[SEO SDK] Data collected successfully', this.data);
 
       // Add to batch queue
       this.dataBatcher.add(this.data);
@@ -187,8 +188,6 @@ class SEODataSDK {
    * Handle page change (for SPAs)
    */
   async onPageChange() {
-    console.log('[SEO SDK] Page change detected');
-
     // Wait a bit for content to load
     setTimeout(async () => {
       await this.collectData();
@@ -281,7 +280,6 @@ class SEODataSDK {
     this.dataBatcher.flush();
 
     this.isInitialized = false;
-    console.log('[SEO SDK] Destroyed');
   }
 }
 

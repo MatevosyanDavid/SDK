@@ -143,29 +143,21 @@
 
   <script>
     // Initialize the SDK (no API endpoint - just collecting and logging data)
+    // Privacy mode defaults to 'auto' - automatically accepts consent and starts tracking
     const seoSDK = new SEODataSDK({
       primaryKeyword: 'SEO best practices',
-      privacyMode: 'opt-in',
       batchInterval: 5000, // 5 seconds for testing
       enableHeatmap: true,
       enableScrollTracking: true,
       enableClickTracking: true
     });
 
-    // Request consent
-    seoSDK.requestConsent().then(hasConsent => {
-      if (hasConsent) {
-        seoSDK.init();
-        console.log('SDK initialized with consent');
-      } else {
-        console.log('User declined consent');
-      }
-    });
+    // SDK auto-initializes with 'auto' privacy mode (no consent banner needed)
+    // If you want to show consent banner, use: privacyMode: 'opt-in' and call seoSDK.requestConsent()
 
     // Demo functions
     async function collectData() {
       const data = await seoSDK.collectData();
-      console.log('Data collected:', data);
       alert('Data collected! Check console for details.');
     }
 
@@ -176,7 +168,6 @@
 
     function showData() {
       const data = seoSDK.getData();
-      console.log('Current data:', data);
       alert('Current data logged to console!');
     }
 

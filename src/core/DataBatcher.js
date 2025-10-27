@@ -4,13 +4,14 @@
  */
 
 class DataBatcher {
-  constructor(apiEndpoint, apiKey, batchInterval = 30000) {
+  constructor(apiEndpoint, apiKey, batchInterval = 30000, onDataCallback = null) {
     this.apiEndpoint = apiEndpoint;
     this.apiKey = apiKey;
     this.batchInterval = batchInterval;
     this.queue = [];
     this.maxQueueSize = 50;
     this.isProcessing = false;
+    this.onDataCallback = onDataCallback; // Custom callback for data handling
 
     // Start batch interval
     this.startBatchInterval();
@@ -32,11 +33,8 @@ class DataBatcher {
       _timestamp: Date.now(),
     });
 
-    console.log('[Data Batcher] Data added to queue. Queue size:', this.queue.length);
-
     // If queue is full, flush immediately
     if (this.queue.length >= this.maxQueueSize) {
-      console.log('[Data Batcher] Queue full, flushing immediately');
       this.flush();
     }
   }
@@ -45,11 +43,8 @@ class DataBatcher {
    * Start batch interval
    */
   startBatchInterval() {
-    console.log('[Data Batcher] Starting batch interval:', this.batchInterval, 'ms');
     this.interval = setInterval(() => {
-      console.log('[Data Batcher] Interval tick. Queue size:', this.queue.length);
       if (this.queue.length > 0) {
-        console.log('[Data Batcher] Flushing queue');
         this.flush();
       }
     }, this.batchInterval);
@@ -68,15 +63,7 @@ class DataBatcher {
    * Flush queue and send data to API
    */
   async flush() {
-    console.log(
-      '[Data Batcher] flush() called. Queue size:',
-      this.queue.length,
-      'isProcessing:',
-      this.isProcessing,
-    );
-
     if (this.queue.length === 0 || this.isProcessing) {
-      console.log('[Data Batcher] Skipping flush (empty queue or already processing)');
       return;
     }
 
@@ -88,7 +75,6 @@ class DataBatcher {
 
     try {
       await this.sendBatch(batch);
-      console.log(`[Data Batcher] Successfully sent ${batch.length} events`);
     } catch (error) {
       console.error('[Data Batcher] Error sending batch:', error);
 
@@ -100,7 +86,7 @@ class DataBatcher {
   }
 
   /**
-   * Send batch to API endpoint
+   * Send batch to API endpoint or custom callback
    */
   async sendBatch(batch) {
     const payload = {
@@ -109,21 +95,25 @@ class DataBatcher {
       timestamp: Date.now(),
     };
 
-    // Log collected data to console
-    console.log('==========================================');
-    console.log('📊 SEO DATA COLLECTED');
-    console.log('==========================================');
-    console.log('Batch Size:', payload.batchSize);
-    console.log('Timestamp:', new Date(payload.timestamp).toISOString());
-    console.log('Events:', payload.events);
-    console.log('==========================================');
+    // If custom callback provided, use it instead of API call
+    if (this.onDataCallback && typeof this.onDataCallback === 'function') {
+      try {
+        await this.onDataCallback(payload);
+        console.log('[Data Batcher] Data sent to custom callback');
+        return { success: true, callback: true };
+      } catch (error) {
+        console.error('[Data Batcher] Callback error:', error);
+        throw error;
+      }
+    }
 
-    // If no API endpoint configured, just log and return
+    // If no API endpoint and no callback, just log
     if (!this.apiEndpoint) {
-      console.log('✅ Data collection complete (API endpoint not configured)');
+      console.log('[Data Batcher] No endpoint or callback configured');
       return { success: true, logged: true };
     }
 
+    // Default: send to API endpoint
     const response = await fetch(this.apiEndpoint, {
       method: 'POST',
       headers: {

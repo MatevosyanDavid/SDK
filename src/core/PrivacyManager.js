@@ -154,7 +154,6 @@ class PrivacyManager {
   giveConsent() {
     this.consentGiven = true;
     this.storeConsent(true);
-    console.log('[Privacy Manager] Consent given');
   }
 
   /**
@@ -163,7 +162,6 @@ class PrivacyManager {
   rejectConsent() {
     this.consentGiven = false;
     this.storeConsent(false);
-    console.log('[Privacy Manager] Consent rejected');
   }
 
   /**
@@ -172,7 +170,6 @@ class PrivacyManager {
   optOut() {
     this.consentGiven = false;
     this.storeConsent(false);
-    console.log('[Privacy Manager] Opted out');
   }
 
   /**
@@ -181,7 +178,6 @@ class PrivacyManager {
   optIn() {
     this.consentGiven = true;
     this.storeConsent(true);
-    console.log('[Privacy Manager] Opted in');
   }
 
   /**

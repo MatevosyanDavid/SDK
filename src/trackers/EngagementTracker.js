@@ -77,8 +77,6 @@ class EngagementTracker {
 
     // Track beforeunload (exit)
     this.addListener(window, 'beforeunload', this.handleBeforeUnload.bind(this));
-
-    console.log('[Engagement Tracker] Started');
   }
 
   /**
@@ -99,8 +97,6 @@ class EngagementTracker {
       element.removeEventListener(event, handler);
     });
     this.listeners = [];
-
-    console.log('[Engagement Tracker] Stopped');
   }
 
   /**

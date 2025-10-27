@@ -14,8 +14,8 @@ class IssuesAnalyzer {
   analyze(data) {
     this.issues = [];
 
-    if (data.page) {
-      this.analyzePageIssues(data.page);
+    if (data.page.page) {
+      this.analyzePageIssues(data.page.page);
     }
 
     if (data.performance) {
@@ -33,7 +33,6 @@ class IssuesAnalyzer {
    * Analyze page-level issues
    */
   analyzePageIssues(page) {
-    // Missing or empty title
     if (!page.title || page.title.trim().length === 0) {
       this.addIssue(
         'critical',
