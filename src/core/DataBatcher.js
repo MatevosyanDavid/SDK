@@ -3,6 +3,8 @@
  * Batches data collection events and sends them to the API endpoint
  */
 
+import axios from 'axios';
+
 class DataBatcher {
   constructor(apiEndpoint, apiKey, batchInterval = 30000, onDataCallback = null) {
     this.apiEndpoint = apiEndpoint;
@@ -89,15 +91,14 @@ class DataBatcher {
    * Send batch to API endpoint or custom callback
    */
   async sendBatch(batch) {
-    const payload = {
-      events: batch,
-      batchSize: batch.length,
-      timestamp: Date.now(),
-    };
-
     // If custom callback provided, use it instead of API call
     if (this.onDataCallback && typeof this.onDataCallback === 'function') {
       try {
+        const payload = {
+          events: batch,
+          batchSize: batch.length,
+          timestamp: Date.now(),
+        };
         await this.onDataCallback(payload);
         console.log('[Data Batcher] Data sent to custom callback');
         return { success: true, callback: true };
@@ -107,28 +108,17 @@ class DataBatcher {
       }
     }
 
-    // If no API endpoint and no callback, just log
-    if (!this.apiEndpoint) {
-      console.log('[Data Batcher] No endpoint or callback configured');
-      return { success: true, logged: true };
+    // Send each event to the API endpoint
+    try {
+      for (const event of batch) {
+        await axios.post('http://localhost:3000/api/data', event);
+      }
+      console.log('[Data Batcher] Data sent successfully');
+      return { success: true };
+    } catch (error) {
+      console.error('[Data Batcher] Error sending data:', error);
+      throw error;
     }
-
-    // Default: send to API endpoint
-    const response = await fetch(this.apiEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-        'X-SDK-Version': '1.0.0',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`);
-    }
-
-    return response.json();
   }
 
   /**

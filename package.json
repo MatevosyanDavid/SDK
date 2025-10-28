@@ -44,8 +44,8 @@
   },
   "homepage": "https://github.com/MatevosyanDavid/SDK#readme",
   "dependencies": {
-    "core-js": "^3.33.0",
-    "firebase": "^12.4.0"
+    "axios": "^1.6.0",
+    "core-js": "^3.33.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
